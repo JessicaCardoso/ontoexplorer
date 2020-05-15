@@ -322,18 +322,19 @@ class Recommendation:
                             range_uri=obj,
                         ):
                             recommendations.append(f"[{name}] -> [{rec.name}]")
-                else:
-                    name = self.trees["data_properties"][pred].name
-                    for rec in self._get_related_properties(
-                        pred, "data_properties", domain_uri=subj
-                    ):
-                        recommendations.append(f"[{name}] -> [{rec.name}]")
+                    else:
+                        name = self.trees["data_properties"][pred].name
+                        for rec in self._get_related_properties(
+                            pred, "data_properties", domain_uri=subj
+                        ):
+                            recommendations.append(f"[{name}] -> [{rec.name}]")
                 if entities[subj] and subj not in verified_entities:
                     verified_entities.append(subj)
                     name = self.trees["classes"][subj].name
                     for rec in self._get_related_classes(pred, subj):
                         recommendations.append(f"[{name}] -> [{rec.name}]")
 
-        random.shuffle(recommendations)
+        if self.order == "random":
+          random.shuffle(recommendations)
 
         return recommendations[: self.size]
