@@ -52,7 +52,8 @@ O processo de recomendação realizada na classe `Recommendation` é ajustado no
 
 A fórmula a seguir representa o *grau familiar máximo* do nó de referência a ser considerado.
 
-![equation](https://latex.codecogs.com/gif.latex?root_{ref}&space;=&space;\left\{\begin{matrix}&space;node_{ref}&space;&plus;&space;fp&space;&&space;\text{if&space;$fp>0$,}&space;\\&space;node_{ref}&space;-&space;fp&space;&&space;\text{if&space;$fp<0$,}&space;\\&space;node_{ref}&space;&&space;\text{otherwise}&space;\end{matrix}\right.)
+<!-- ![equation](https://latex.codecogs.com/gif.latex?root_{ref}&space;=&space;\left\{\begin{matrix}&space;node_{ref}&space;&plus;&space;fp&space;&&space;\text{if&space;$fp>0$,}&space;\\&space;node_{ref}&space;-&space;fp&space;&&space;\text{if&space;$fp<0$,}&space;\\&space;node_{ref}&space;&&space;\text{otherwise}&space;\end{matrix}\right.) -->
+![equation](misc/root_ref.gif)
 
 
 Onde ![fp](https://render.githubusercontent.com/render/math?math=fp) é a *family_position*, ![node_ref](https://render.githubusercontent.com/render/math?math=node_{ref}) é o nível do nó de referência e ![root_ref](https://render.githubusercontent.com/render/math?math=root_{ref}) é o grau familiar máximo calculado. Por exemplo, na árvore de classes, dado o nó de referência *Actor*, se o ![fp](https://render.githubusercontent.com/render/math?math=fp) for definido como -1, o ![root_ref](https://render.githubusercontent.com/render/math?math=root_{ref}) apontaria para o nó *Person*.
