@@ -44,23 +44,10 @@ class Recommendation:
             level + 1, self.trees[key_tree][node.parent], key_tree, root
         )
 
-    def _get_descendent(self, level, node, key_tree):
-        if level == 0:
-            return node
-        if node.is_leaf:
-            return node
-        return self._get_descendent(
-            level - 1, self.trees[key_tree][node.parent], key_tree
-        )
-
     def _get_reference_node(self, node, key_tree, root):
         if self.family_position < 0:
             ref_node = self._get_ascedent(
                 self.family_position, node, key_tree, root
-            )
-        elif self.family_position > 0:
-            ref_node = self._get_descendent(
-                self.family_position, node, key_tree
             )
         else:
             ref_node = node
@@ -123,6 +110,30 @@ class Recommendation:
                 break
         return has_intersection
 
+    def _add_related_properties(
+        self, class_uri, node_ref, node_list, related, list_ref="domain"
+    ):
+        node_list_ref = {
+            "domain": node_ref.domains,
+            "range": node_ref.ranges,
+        }
+
+        if class_uri:
+            if class_uri in node_list_ref[list_ref]:
+                related.append(node_ref)
+            else:
+                ancestor = self._has_ancestor_in(
+                    class_uri, node_list_ref[list_ref]
+                )
+                if ancestor:
+                    related.append(node_ref)
+        else:
+            check_domain = self._has_intersection(
+                node_list_ref[list_ref], node_list_ref[list_ref]
+            )
+            if check_domain:
+                related.append(node_ref)
+
     def _get_related_properties(
         self,
         node_key,
@@ -147,42 +158,20 @@ class Recommendation:
                     )
                     and node.domains
                 ):
-                    if domain_uri:
-                        if domain_uri in node.domains:
-                            related.append(node)
-                        else:
-                            ancestor = self._has_ancestor_in(
-                                domain_uri, node.domains
-                            )
-                            if ancestor:
-                                related.append(node)
-                    else:
-                        check_domain = self._has_intersection(
-                            nodes_domains, node.domains
-                        )
-                        if check_domain:
-                            related.append(node)
-
+                    # Obter propriedades relacionadas com base no domain
+                    self._add_related_properties(
+                        domain_uri, node, nodes_domains, related, "domain"
+                    )
                 if (
                     node not in related
                     and (self.filter_by == "range" or self.filter_by == "both")
                     and (node.ranges and prop_tree != "data_properties")
                 ):
-                    if range_uri:
-                        if range_uri in node.ranges:
-                            related.append(node)
-                        else:
-                            ancestor = self._has_ancestor_in(
-                                range_uri, node.ranges
-                            )
-                            if ancestor:
-                                related.append(node)
-                    else:
-                        check_range = self._has_intersection(
-                            nodes_ranges, node.ranges
-                        )
-                        if check_range:
-                            related.append(node)
+                    # Obter propriedades relacionadas com base no range
+                    self._add_related_properties(
+                        range_uri, node, nodes_ranges, related, "range"
+                    )
+
             if self.order == "random":
                 random.shuffle(related)
         return related[: self.size]
