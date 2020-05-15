@@ -188,15 +188,30 @@ class Recommendation:
         return related[: self.size]
 
     def _add_related_classes(
-        self, ignore_uri, node_ref, related, list_ref="domain"
+        self, class_uri, node_ref, related, list_ref="domain"
     ):
         node_list_ref = {
             "domain": node_ref.domains,
             "range": node_ref.ranges,
         }
-        for uri in node_list_ref[list_ref]:
-            if uri != ignore_uri:
-                related.append(self.trees["classes"][uri])
+        # Obter nós relacionados a classe
+        if class_uri in node_list_ref[list_ref]:
+            nodes = self._search_nodes(
+                class_uri, "classes", self.roots["classes"]
+            )
+            for node in nodes:
+                if node.data in node_list_ref[list_ref]:
+                    related.append(node)
+        else:
+            ancestor = self._has_ancestor_in(
+                class_uri, node_list_ref[list_ref]
+            )
+            if ancestor:
+                # obter relacionados ao nó class_uri que sejam descendentes de ancestor
+                nodes = self._search_nodes(class_uri, "classes", ancestor)
+                for node in nodes:
+                    if node.data != ancestor:
+                        related.append(node)
 
     def _get_related_classes(self, node_key, domain_uri=None, range_uri=None):
         node = None
@@ -207,55 +222,20 @@ class Recommendation:
         elif node_key in self.trees["data_properties"]:
             node = self.trees["data_properties"][node_key]
             prop_tree = "data_properties"
-        if node:
+        if node and node not in related:
             if (
-                node not in related
-                and (
-                    self.filter_by == "domain"
-                    or self.filter_by == "both"
-                    or prop_tree == "data_properties"
-                )
-                and node.domains
-            ):
-                if domain_uri in node.domains:
-                    self._add_related_classes(
-                        domain_uri, node, related, "domain"
-                    )
-                else:
-                    ancestor = self._has_ancestor_in(domain_uri, node.domains)
-                    if ancestor:
-                        self._add_related_classes(
-                            ancestor, node, related, "domain"
-                        )
-                        # obter relacionados ao nó domain_uri que sejam descendentes de ancestor
-                        nodes = self._search_nodes(
-                            domain_uri, "classes", ancestor
-                        )
-                        for node in nodes:
-                            if node.data != ancestor:
-                                related.append(node)
-            if (
-                node not in related
-                and (self.filter_by == "range" or self.filter_by == "both")
-                and (node.ranges and prop_tree != "data_properties")
-            ):
-                if range_uri in node.ranges:
+                self.filter_by == "domain" or self.filter_by == "both"
+            ) and node.domains:
+                # Obter classes relacionadas com base no domain
+                self._add_related_classes(domain_uri, node, related, "domain")
+            if prop_tree != "data_properties":
+                if (
+                    self.filter_by == "range" or self.filter_by == "both"
+                ) and node.ranges:
+                    # Obter classes relacionadas com base no range
                     self._add_related_classes(
                         range_uri, node, related, "range"
                     )
-                else:
-                    ancestor = self._has_ancestor_in(range_uri, node.ranges)
-                    if ancestor:
-                        self._add_related_classes(
-                            ancestor, node, related, "range"
-                        )
-                        # obter relacionados ao nó range_uri que sejam descendentes de ancestor
-                        nodes = self._search_nodes(
-                            range_uri, "classes", ancestor
-                        )
-                        for node in nodes:
-                            if node.data != ancestor:
-                                related.append(node)
             if self.order == "random":
                 random.shuffle(related)
         return related[: self.size]
@@ -335,6 +315,6 @@ class Recommendation:
                         recommendations.append(f"[{name}] -> [{rec.name}]")
 
         if self.order == "random":
-          random.shuffle(recommendations)
+            random.shuffle(recommendations)
 
         return recommendations[: self.size]
