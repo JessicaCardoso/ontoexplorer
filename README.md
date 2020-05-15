@@ -43,7 +43,7 @@ O processo de recomendação realizada na classe `Recommendation` é ajustado no
 | depth                     | 3                 | Profundidade da busca na árvore a partir da *family_position*, pode assumir apenas valores positivo.     |
 | order                     | random            | A forma como as sugestões serão apresentadas, se nenhum parâmetro for passado retorna na ordem da busca. |
 | number_of_recommendations | 5                 | Quantidade máxima de recomendações, deve ser um número maior do que zero.                                |
-| ontology_filename         | movieontology.ttl | Nome do arquivo da ontologia que se encontra no mesmo de nível recommendation.py                         |
+| ontology_filename         | movieontology.ttl | Nome do arquivo da ontologia que se encontra no mesmo nível de *recommendation.py*.                      |
 | ontology_format           | ttl               | formato da ontologia, formato definido de acordo com os formatos da rdflib.                              |
 
 > nó de referência, é o nó que desejamos substituir por outro
@@ -84,7 +84,9 @@ Caso a propriedade de referência seja *belongsToGenre* e filtremos pelo *Domain
 from recommendations import Recommendation
 
 # Qual o gênero do filme Avatar?
-rec = Recommendation()>>> question_triples =  [
+rec = Recommendation()
+
+question_triples =  [
     ("http://www.movieontology.org/2009/10/01/movieontology.owl#Movie", "has_value", "Avatar"),
      ("http://www.movieontology.org/2009/10/01/movieontology.owl#Movie", "http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre", "http://www.movieontology.org/2009/10/01/movieontology.owl#Genre")
 ]
