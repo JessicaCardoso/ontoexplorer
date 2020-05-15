@@ -52,13 +52,14 @@ O processo de recomendação realizada na classe `Recommendation` é ajustado no
 
 A fórmula a seguir representa o *grau familiar máximo* do nó de referência a ser considerado.
 
-![fp](https://latex.codecogs.com/gif.latex?root_{ref}&space;=&space;\left\{\begin{matrix}&space;node_{ref}&space;&plus;&space;fp&space;&&space;\text{if&space;$fp>0$,}&space;\\&space;node_{ref}&space;-&space;fp&space;&&space;\text{if&space;$fp<0$,}&space;\\&space;node_{ref}&space;&&space;\text{otherwise}&space;\end{matrix}\right.)
+![equation](https://latex.codecogs.com/gif.latex?root_{ref}&space;=&space;\left\{\begin{matrix}&space;node_{ref}&space;&plus;&space;fp&space;&&space;\text{if&space;$fp>0$,}&space;\\&space;node_{ref}&space;-&space;fp&space;&&space;\text{if&space;$fp<0$,}&space;\\&space;node_{ref}&space;&&space;\text{otherwise}&space;\end{matrix}\right.)
 
-Onde $fp$ é a *family_position*, $node_{ref}$ é o nível do nó de referência e $root_{ref}$ é o grau familiar máximo calculado. Por exemplo, na árvore de classes, dado o nó de referência *Actor*, se o $fp$ for definido como -1, o $root_{ref}$ apontaria para o nó *Person*.
 
-Outro parâmetro importante é a profundidade da consulta na árvore que é definida pela variável _depth_ que pode assumir <mark>apenas valores positivos</mark>. Suponha que o $root_{ref}$ seja o nó *Person*, se a profundidade definida for 1, então todos os filhos de *Person* podem ser sugeridos.
+Onde ![fp](https://render.githubusercontent.com/render/math?math=fp) é a *family_position*, ![node_ref](https://render.githubusercontent.com/render/math?math=node_{ref}) é o nível do nó de referência e ![root_ref](https://render.githubusercontent.com/render/math?math=root_{ref}) é o grau familiar máximo calculado. Por exemplo, na árvore de classes, dado o nó de referência *Actor*, se o ![fp](https://render.githubusercontent.com/render/math?math=fp) for definido como -1, o ![root_ref](https://render.githubusercontent.com/render/math?math=root_{ref}) apontaria para o nó *Person*.
 
-Também podemos filtrar os nós a serem sugeridos com base em seu domínio e  alcance, na tabela a seguir temos alguns exemplos de nós da árvore de propriedade com seus respectivos *domains* e *ranges*, para o próximo exemplo vamos considerar o $fp=1$  e a $depth=2$.
+Outro parâmetro importante é a profundidade da consulta na árvore que é definida pela variável _depth_ que pode assumir <mark>apenas valores positivos</mark>. Suponha que o ![node_ref](https://render.githubusercontent.com/render/math?math=node_{ref}) seja o nó *Person*, se a profundidade definida for 1, então todos os filhos de *Person* podem ser sugeridos.
+
+Também podemos filtrar os nós a serem sugeridos com base em seu domínio e  alcance, na tabela a seguir temos alguns exemplos de nós da árvore de propriedade com seus respectivos *domains* e *ranges*, para o próximo exemplo vamos considerar o ![fp=1](https://render.githubusercontent.com/render/math?math=fp=1) e a ![fp=1](https://render.githubusercontent.com/render/math?math=depth=2).
 
 | **Object Property** | **Domain**            | **Range**      |
 | ------------------- | --------------------- | -------------- |
