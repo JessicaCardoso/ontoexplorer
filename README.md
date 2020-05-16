@@ -54,7 +54,7 @@ Para realizar a consulta de nós relacionados, é necessária a definição de a
 
 ![equation](imgs/root_ref.gif)
 
-Onde ![node_ref](https://render.githubusercontent.com/render/math?math=node_{ref}) é o nó de referência e ![search_root](https://render.githubusercontent.com/render/math?math=search\_root) é novo nó calculado, a função *kthAncestor* é definida no bloco de código a seguir, onde ancestors indica os ancestrais do nó dado.
+Onde *node_ref* é o nó de referência e *search_root* é novo nó calculado, a função *kthAncestor* é definida no bloco de código a seguir, onde ancestors indica os ancestrais do nó dado.
 
 ```
 PROGRAM kthAncestor(node_ref, family_position):
@@ -70,11 +70,11 @@ PROGRAM kthAncestor(node_ref, family_position):
 END.
 ```
 
-Se na árvore de classes, o nó de referência for *Actor*, e o *family_position* for definido como -1, o ![root_ref](https://render.githubusercontent.com/render/math?math=root_{ref}) apontaria para o nó *Person*.
+Se na árvore de classes, o nó de referência for *Actor*, e o *family_position* for definido como -1, o *root_ref* apontaria para o nó *Person*.
 
-Outro parâmetro importante é a profundidade da consulta na árvore que é definida pela variável _depth_ que pode assumir apenas valores positivos. Suponha que o ![node_ref](https://render.githubusercontent.com/render/math?math=node_{ref}) seja o nó *Person*, se a profundidade definida for 1, então todos os filhos de *Person* podem ser sugeridos.
+Outro parâmetro importante é a profundidade da consulta na árvore que é definida pela variável _depth_ que pode assumir apenas valores positivos. Suponha que o *node_ref* seja o nó *Person*, se a profundidade definida for 1, então todos os filhos de *Person* podem ser sugeridos.
 
-Também podemos filtrar os nós a serem sugeridos com base em seu domínio e  alcance, na tabela a seguir temos alguns exemplos de nós da árvore de propriedade com seus respectivos *domains* e *ranges*, para o próximo exemplo vamos considerar o *family_position* e a ![depth=1](https://render.githubusercontent.com/render/math?math=depth=2).
+Também podemos filtrar os nós a serem sugeridos com base em seu domínio e  alcance, na tabela a seguir temos alguns exemplos de nós da árvore de propriedade com seus respectivos *domains* e *ranges*, para o próximo exemplo vamos considerar o *family_position* e a *depth=2*.
 
 | **Object Property** | **Domain**            | **Range**      |
 | ------------------- | --------------------- | -------------- |
