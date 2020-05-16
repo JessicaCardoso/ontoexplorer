@@ -70,11 +70,11 @@ PROGRAM kthAncestor(node_ref, family_position):
 END.
 ```
 
-Se na árvore de classes, o nó de referência for *Actor*, e o ![family_position](https://render.githubusercontent.com/render/math?math=family\_position) for definido como -1, o ![root_ref](https://render.githubusercontent.com/render/math?math=root_{ref}) apontaria para o nó *Person*.
+Se na árvore de classes, o nó de referência for *Actor*, e o *family_position* for definido como -1, o ![root_ref](https://render.githubusercontent.com/render/math?math=root_{ref}) apontaria para o nó *Person*.
 
 Outro parâmetro importante é a profundidade da consulta na árvore que é definida pela variável _depth_ que pode assumir apenas valores positivos. Suponha que o ![node_ref](https://render.githubusercontent.com/render/math?math=node_{ref}) seja o nó *Person*, se a profundidade definida for 1, então todos os filhos de *Person* podem ser sugeridos.
 
-Também podemos filtrar os nós a serem sugeridos com base em seu domínio e  alcance, na tabela a seguir temos alguns exemplos de nós da árvore de propriedade com seus respectivos *domains* e *ranges*, para o próximo exemplo vamos considerar o ![family_position=-1](https://render.githubusercontent.com/render/math?math=family\_position=-1) e a ![depth=1](https://render.githubusercontent.com/render/math?math=depth=2).
+Também podemos filtrar os nós a serem sugeridos com base em seu domínio e  alcance, na tabela a seguir temos alguns exemplos de nós da árvore de propriedade com seus respectivos *domains* e *ranges*, para o próximo exemplo vamos considerar o *family_position* e a ![depth=1](https://render.githubusercontent.com/render/math?math=depth=2).
 
 | **Object Property** | **Domain**            | **Range**      |
 | ------------------- | --------------------- | -------------- |
@@ -87,6 +87,12 @@ Também podemos filtrar os nós a serem sugeridos com base em seu domínio e  al
 Dada a propriedade *wrote* se quisermos delimitar pelo *Range*, teremos zero sugestões, pois não existe outra propriedade com o *Range* de *wrote* nesta tabela. Entretanto se filtramos a propriedade pelo *Domain* podemos sugerir a propriedade *isAwardedWith*, pois *Writer* é descendente de *Person* como podemos ver na imagem _Classes Tree_. 
 
 Caso a propriedade de referência seja *belongsToGenre* e filtremos pelo *Domain* teremos como sugestão *hasActress*, *hasActor* e *isAwardedWith* pois compartilham domínios em comum com *belongsToGenre*.
+
+Na figura a seguir mostramos o processo de sugestão de nós baseados no *range* da propriedade *belongsToGenre* e algumas variações de *depth* e *family_position*.
+
+<p align="center">
+<img src="imgs/tree_recommendation_dr.png"/>
+</p>
 
 ### Exemplo:
 
