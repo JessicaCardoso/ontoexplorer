@@ -33,6 +33,7 @@ class Recommendation:
         self.family_position = settings.getint("family_position")
         self.filter_by = settings.get("filter_by")
         self.order = settings.get("order")
+        self.order_set = settings.get("order_set")
         self.size = settings.getint("number_of_recommendations")
 
     def _get_ascedent(self, level, node, key_tree, root):
@@ -134,6 +135,32 @@ class Recommendation:
             if check_domain:
                 related.append(node_ref)
 
+    def _add_related_classes(
+        self, class_uri, node_ref, related, list_ref="domain"
+    ):
+        node_list_ref = {
+            "domain": node_ref.domains,
+            "range": node_ref.ranges,
+        }
+        # Obter nós relacionados a classe
+        if class_uri in node_list_ref[list_ref]:
+            nodes = self._search_nodes(
+                class_uri, "classes", self.roots["classes"]
+            )
+            for node in nodes:
+                if node.data in node_list_ref[list_ref]:
+                    related.append(node)
+        else:
+            ancestor = self._has_ancestor_in(
+                class_uri, node_list_ref[list_ref]
+            )
+            if ancestor:
+                # obter relacionados ao nó class_uri que sejam descendentes de ancestor
+                nodes = self._search_nodes(class_uri, "classes", ancestor)
+                for node in nodes:
+                    if node.data != ancestor:
+                        related.append(node)
+
     def _get_related_properties(
         self,
         node_key,
@@ -172,35 +199,13 @@ class Recommendation:
                         range_uri, node, nodes_ranges, related, "range"
                     )
 
-            if self.order == "random":
-                random.shuffle(related)
-        return related[: self.size]
+            if self.order_set == "property" or self.order_set == "all":
+                if self.order == "random":
+                    random.shuffle(related)
+                elif self.order == "semantic":
+                    pass
 
-    def _add_related_classes(
-        self, class_uri, node_ref, related, list_ref="domain"
-    ):
-        node_list_ref = {
-            "domain": node_ref.domains,
-            "range": node_ref.ranges,
-        }
-        # Obter nós relacionados a classe
-        if class_uri in node_list_ref[list_ref]:
-            nodes = self._search_nodes(
-                class_uri, "classes", self.roots["classes"]
-            )
-            for node in nodes:
-                if node.data in node_list_ref[list_ref]:
-                    related.append(node)
-        else:
-            ancestor = self._has_ancestor_in(
-                class_uri, node_list_ref[list_ref]
-            )
-            if ancestor:
-                # obter relacionados ao nó class_uri que sejam descendentes de ancestor
-                nodes = self._search_nodes(class_uri, "classes", ancestor)
-                for node in nodes:
-                    if node.data != ancestor:
-                        related.append(node)
+        return related
 
     def _get_related_classes(self, node_key, domain_uri=None, range_uri=None):
         node = None
@@ -225,9 +230,14 @@ class Recommendation:
                     self._add_related_classes(
                         range_uri, node, related, "range"
                     )
-            if self.order == "random":
-                random.shuffle(related)
-        return related[: self.size]
+
+            if self.order_set == "class" or self.order_set == "all":
+                if self.order == "random":
+                    random.shuffle(related)
+                elif self.order == "semantic":
+                    pass
+
+        return related
 
     def _get_entities(self, question_triples):
         question_triples.sort(key=lambda x: x[1])
@@ -302,8 +312,5 @@ class Recommendation:
                     name = self.trees["classes"][subj].name
                     for rec in self._get_related_classes(pred, subj):
                         recommendations.append(f"[{name}] -> [{rec.name}]")
-
-        if self.order == "random":
-            random.shuffle(recommendations)
 
         return recommendations[: self.size]
