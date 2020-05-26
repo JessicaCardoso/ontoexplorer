@@ -302,11 +302,14 @@ class Recommendation:
                         ):
                             recommendations.append(f"[{name}] -> [{rec.name}]")
                     else:
-                        name = self.trees["data_properties"][pred].name
-                        for rec in self._get_related_properties(
-                            pred, "data_properties", domain_uri=subj
-                        ):
-                            recommendations.append(f"[{name}] -> [{rec.name}]")
+                        if pred in self.trees["data_properties"]:
+                            name = self.trees["data_properties"][pred].name
+                            for rec in self._get_related_properties(
+                                pred, "data_properties", domain_uri=subj
+                            ):
+                                recommendations.append(
+                                    f"[{name}] -> [{rec.name}]"
+                                )
                 if entities[subj] and subj not in verified_entities:
                     verified_entities.append(subj)
                     name = self.trees["classes"][subj].name
