@@ -283,9 +283,12 @@ class Recommendation:
                     verified_entities.append(obj)
                     prop = prop_ref[obj]
                     # name = self.trees["classes"][obj].name
-                    name = self.trees["classes"][subj].name
-                    for rec in self._get_related_classes(prop, range_uri=obj):
-                        recommendations.append(f"[{name}]: [{rec.name}]")
+                    if subj in self.trees["classes"]:
+                        name = self.trees["classes"][subj].name
+                        for rec in self._get_related_classes(
+                            prop, range_uri=obj
+                        ):
+                            recommendations.append(f"[{name}]: [{rec.name}]")
             else:
                 if (
                     entities[obj]
@@ -315,8 +318,11 @@ class Recommendation:
                                 )
                 if entities[subj] and subj not in verified_entities:
                     verified_entities.append(subj)
-                    name = self.trees["classes"][subj].name
-                    for rec in self._get_related_classes(pred, subj):
-                        recommendations.append(f"[{name}] -> [{rec.name}]")
+                    if subj in self.trees["classes"]:
+                        name = self.trees["classes"][subj].name
+                        for rec in self._get_related_classes(pred, subj):
+                            recommendations.append(
+                                self.text.format(name, rec.name)
+                            )
 
         return recommendations[: self.size]
