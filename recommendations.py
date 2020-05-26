@@ -35,6 +35,7 @@ class Recommendation:
         self.order = settings.get("order")
         self.order_set = settings.get("order_set")
         self.size = settings.getint("number_of_recommendations")
+        self.text = settings.get("rec_text")
 
     def _get_ascedent(self, level, node, key_tree, root):
         if level == 0:
@@ -300,7 +301,9 @@ class Recommendation:
                             domain_uri=subj,
                             range_uri=obj,
                         ):
-                            recommendations.append(f"[{name}] -> [{rec.name}]")
+                            recommendations.append(
+                                self.text.format(name, rec.name)
+                            )
                     else:
                         if pred in self.trees["data_properties"]:
                             name = self.trees["data_properties"][pred].name
@@ -308,7 +311,7 @@ class Recommendation:
                                 pred, "data_properties", domain_uri=subj
                             ):
                                 recommendations.append(
-                                    f"[{name}] -> [{rec.name}]"
+                                    self.text.format(name, rec.name)
                                 )
                 if entities[subj] and subj not in verified_entities:
                     verified_entities.append(subj)
