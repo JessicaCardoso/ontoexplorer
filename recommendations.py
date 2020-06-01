@@ -6,7 +6,8 @@ import configparser
 import pathlib
 import os
 import sys
-
+from unidecode import unidecode
+from gensim.models import KeyedVectors
 
 _ROOT = pathlib.Path(__file__).parent.absolute()
 
@@ -36,6 +37,35 @@ class Recommendation:
         self.order_set = settings.get("order_set")
         self.size = settings.getint("number_of_recommendations")
         self.text = settings.get("rec_text")
+        model_path = settings.get("model_path")
+        if model_path:
+            self.similarity_threshold = settings.getfloat(
+                "similarity_threshold"
+            )
+            self.embeddings = KeyedVectors.load_word2vec_format(
+                model_path, binary=False, unicode_errors="ignore"
+            )
+
+    def _order_and_filter_by_similarity(self, source, targets):
+        # calcular a similaridade entre os embeddings da palavra a ser
+        # substituída com as candidatas.
+        distances = []
+        source_text = unidecode(source.name.lower()).split()
+        e1 = [i if i in self.embeddings else "unk" for i in source_text]
+        for node in targets:
+            target_text = unidecode(node.name.lower()).split()
+            e2 = [i if i in self.embeddings else "unk" for i in target_text]
+            distances.append(self.embeddings.n_similarity(e1, e2))
+
+        # Ordena do maior para o menor com base na similaridade
+        suggestions = [
+            targets[index]
+            for index, distance in sorted(
+                enumerate(distances), key=lambda x: x[1], reverse=True
+            )
+            if distance >= self.similarity_threshold
+        ]
+        return suggestions
 
     def _get_ascedent(self, level, node, key_tree, root):
         if level == 0:
@@ -204,7 +234,9 @@ class Recommendation:
                 if self.order == "random":
                     random.shuffle(related)
                 elif self.order == "semantic":
-                    pass
+                    related = self._order_and_filter_by_similarity(
+                        self.trees[prop_tree][node_key], related
+                    )
 
         return related
 
@@ -236,7 +268,13 @@ class Recommendation:
                 if self.order == "random":
                     random.shuffle(related)
                 elif self.order == "semantic":
-                    pass
+                    if domain_uri:
+                        class_node = self.trees["classes"][domain_uri]
+                    if range_uri:
+                        class_node = self.trees["classes"][range_uri]
+                    related = self._order_and_filter_by_similarity(
+                        class_node, related
+                    )
 
         return related
 
