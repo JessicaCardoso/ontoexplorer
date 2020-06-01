@@ -831,13 +831,13 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Entertaining_Information
 <http://www.movieontology.org/2009/10/01/movieontology.owl#Entertaining_Information> rdf:type owl:Class ;
                                                                                      rdfs:subClassOf <http://www.movieontology.org/2009/10/01/movieontology.owl#Entertainment> ;
-                                                                                     rdfs:label "Informação de Entreterimento"@pt-br .
+                                                                                     rdfs:label "Informação de Entretenimento"@pt-br .
 
 
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Entertainment
 <http://www.movieontology.org/2009/10/01/movieontology.owl#Entertainment> rdf:type owl:Class ;
                                                                           rdfs:subClassOf <http://www.movieontology.org/2009/10/01/movieontology.owl#Genre> ;
-                                                                          rdfs:label "Entreterimento"@pt-br .
+                                                                          rdfs:label "Entretenimento"@pt-br .
 
 
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Europe
@@ -888,7 +888,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Imaginational_Entertainment
 <http://www.movieontology.org/2009/10/01/movieontology.owl#Imaginational_Entertainment> rdf:type owl:Class ;
                                                                                         rdfs:subClassOf <http://www.movieontology.org/2009/10/01/movieontology.owl#Entertainment> ;
-                                                                                        rdfs:label "Entreterimento Imaginativo"@pt-br .
+                                                                                        rdfs:label "Entretenimento Imaginativo"@pt-br .
 
 
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Info-TV
@@ -900,13 +900,13 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Information
 <http://www.movieontology.org/2009/10/01/movieontology.owl#Information> rdf:type owl:Class ;
                                                                         rdfs:subClassOf <http://www.movieontology.org/2009/10/01/movieontology.owl#Genre> ;
-                                                                        rdfs:label "Informção"@pt-br .
+                                                                        rdfs:label "Informação"@pt-br .
 
 
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Intelectual_Entertainment
 <http://www.movieontology.org/2009/10/01/movieontology.owl#Intelectual_Entertainment> rdf:type owl:Class ;
                                                                                       rdfs:subClassOf <http://www.movieontology.org/2009/10/01/movieontology.owl#Experience> ;
-                                                                                      rdfs:label "Entreterimento Intelectual"@pt-br .
+                                                                                      rdfs:label "Entretenimento Intelectual"@pt-br .
 
 
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Kids
@@ -971,7 +971,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#Musical_Entertainment
 <http://www.movieontology.org/2009/10/01/movieontology.owl#Musical_Entertainment> rdf:type owl:Class ;
                                                                                   rdfs:subClassOf <http://www.movieontology.org/2009/10/01/movieontology.owl#Intelectual_Entertainment> ;
-                                                                                  rdfs:label "Entreterimento Musical"@pt-br .
+                                                                                  rdfs:label "Entretenimento Musical"@pt-br .
 
 
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#North_American_Company
@@ -1154,7 +1154,7 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#TV-Entertainment
 <http://www.movieontology.org/2009/10/01/movieontology.owl#TV-Entertainment> rdf:type owl:Class ;
                                                                              rdfs:subClassOf <http://www.movieontology.org/2009/10/01/movieontology.owl#Experience> ;
-                                                                             rdfs:label "Entreterimento televisivo"@pt-br .
+                                                                             rdfs:label "Entretenimento televisivo"@pt-br .
 
 
 ###  http://www.movieontology.org/2009/10/01/movieontology.owl#TVSeries

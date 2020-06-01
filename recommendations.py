@@ -37,6 +37,7 @@ class Recommendation:
         self.order_set = settings.get("order_set")
         self.size = settings.getint("number_of_recommendations")
         self.text = settings.get("rec_text")
+        self.suggestion_text = settings.get("suggestion_text")
         model_path = settings.get("model_path")
         if model_path:
             self.similarity_threshold = settings.getfloat(
@@ -363,4 +364,4 @@ class Recommendation:
                                 self.text.format(name, rec.name)
                             )
 
-        return recommendations[: self.size]
+        return self.suggestion_text, recommendations[: self.size]
