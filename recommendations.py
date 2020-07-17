@@ -344,7 +344,7 @@ class Recommendation:
                             range_uri=obj,
                         ):
                             recommendations.append(
-                                self.text.format(name, rec.name)
+                                self.text.format(rec.name)
                             )
                     else:
                         if pred in self.trees["data_properties"]:
@@ -353,7 +353,7 @@ class Recommendation:
                                 pred, "data_properties", domain_uri=subj
                             ):
                                 recommendations.append(
-                                    self.text.format(name, rec.name)
+                                    self.text.format(rec.name)
                                 )
                 if entities[subj] and subj not in verified_entities:
                     verified_entities.append(subj)
@@ -361,7 +361,7 @@ class Recommendation:
                         name = self.trees["classes"][subj].name
                         for rec in self._get_related_classes(pred, subj):
                             recommendations.append(
-                                self.text.format(name, rec.name)
+                                self.text.format(rec.name)
                             )
 
         return self.suggestion_text, recommendations[: self.size]
