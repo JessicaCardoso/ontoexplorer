@@ -327,7 +327,7 @@ class Recommendation:
                         for rec in self._get_related_classes(
                             prop, range_uri=obj
                         ):
-                            recommendations.append(f"{name}: {rec.name}")
+                            recommendations.append(f"🏷️ {name}: {rec.name}")
             else:
                 if (
                     entities[obj]
