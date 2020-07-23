@@ -279,42 +279,96 @@ class Recommendation:
 
         return related
 
-    def _get_entities(self, question_triples):
-        question_triples.sort(key=lambda x: x[1])
-        entities = dict()
-        subj_ref = {}
+    # def _get_entities(self, question_triples):
+    #     question_triples.sort(key=lambda x: x[1])
+    #     entities = dict()
+    #     subj_ref = {}
+    #     prop_ref = {}
+    #     for subj, pred, obj in question_triples:
+    #         if pred == "has_value":
+    #             entities[subj] = False
+    #             if obj in self.trees["classes"]:
+    #                 entities[obj] = True
+    #                 if subj in subj_ref:
+    #                     subj_ref[subj].append(obj)
+    #                 else:
+    #                     subj_ref[subj] = [obj]
+    #             else:
+    #                 entities[obj] = False
+    #         else:
+    #             if obj in subj_ref:
+    #                 for value in subj_ref[obj]:
+    #                     prop_ref[value] = pred
+    #             # Subject
+    #             if subj not in entities:
+    #                 entities[subj] = True
+    #             # Object
+    #             if obj not in entities:
+    #                 entities[obj] = True
+    #             # Predicate
+    #             if entities[obj]:
+    #                 entities[pred] = True
+    #             else:
+    #                 entities[pred] = False
+    #     return prop_ref, entities
+
+    def entities_that_can_be_exchanged(self, question_triples):
+        can_be_exchanged = {}
         prop_ref = {}
-        for subj, pred, obj in question_triples:
-            if pred == "has_value":
-                entities[subj] = False
-                if obj in self.trees["classes"]:
-                    entities[obj] = True
-                    if subj in subj_ref:
-                        subj_ref[subj].append(obj)
+        class_ref = {}
+
+        entities_with_values = 0
+        # Caso 1, se houver has_value
+        for first, middle, last in question_triples:
+            if middle == "has_value":
+                # A classe da direita não pode ser trocada
+                can_be_exchanged[first] = False
+                entities_with_values += 1
+                # Se o last estiver nas classes da ontologia, pode ser trocado
+                if last in self.trees["classes"]:
+                    can_be_exchanged[last] = True
+                    # Mais de um elemento pode estar referenciando o last
+                    if first in class_ref:
+                        class_ref[first].append(last)
                     else:
-                        subj_ref[subj] = [obj]
+                        class_ref[first] = [last]
+                # Se for uma URI fora da ontologia, não há como trocar.
                 else:
-                    entities[obj] = False
-            else:
-                if obj in subj_ref:
-                    for value in subj_ref[obj]:
-                        prop_ref[value] = pred
+                    can_be_exchanged[last] = False
+
+        # Caso 2, todas as entidades tem valores
+        if entities_with_values == len(question_triples):
+            for first, _, last in question_triples:
+                can_be_exchanged[first] = True
+                can_be_exchanged[last] = False
+            
+
+        # Caso 3, desconsiderar as triplas com has_value
+        for first, middle, last in question_triples:
+            if middle != "has_value":
+                # Se o último elemento da tripla era o sujeito da classe de troca, 
+                # então obtemos a sua relação
+                if last in class_ref:
+                    for value in class_ref[last]:
+                        prop_ref[value] = middle
+                # Preencher as entidades faltantes
                 # Subject
-                if subj not in entities:
-                    entities[subj] = True
+                if first not in can_be_exchanged:
+                    can_be_exchanged[first] = True
                 # Object
-                if obj not in entities:
-                    entities[obj] = True
+                if last not in can_be_exchanged:
+                    can_be_exchanged[last] = True
                 # Predicate
-                if entities[obj]:
-                    entities[pred] = True
+                if can_be_exchanged[last]:
+                    can_be_exchanged[middle] = True
                 else:
-                    entities[pred] = False
-        return prop_ref, entities
+                    can_be_exchanged[middle] = False
+            
+        return prop_ref, can_be_exchanged
 
     def get_recommendations(self, question_triples):
         recommendations = []
-        prop_ref, entities = self._get_entities(question_triples)
+        prop_ref, entities = self.entities_that_can_be_exchanged(question_triples)
         verified_entities = []
         for subj, pred, obj in question_triples:
             if pred == "has_value":
