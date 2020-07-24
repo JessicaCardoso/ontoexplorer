@@ -39,7 +39,7 @@ class Recommendation:
         self.text = settings.get("rec_text")
         self.suggestion_text = settings.get("suggestion_text")
         model_path = settings.get("model_path")
-        if model_path if self.order=="semantic":
+        if model_path and self.order=="semantic":
             self.similarity_threshold = settings.getfloat(
                 "similarity_threshold"
             )
@@ -366,22 +366,39 @@ class Recommendation:
             
         return prop_ref, can_be_exchanged
 
-    def get_recommendations(self, question_triples):
+
+    def get_recommendations(self, question_triples, nlg=None):
+        # nlg = nlg[0]
         recommendations = []
         prop_ref, entities = self.entities_that_can_be_exchanged(question_triples)
         verified_entities = []
+
+        # -------------------------Caso especial de gênero-------------------------------------------------------
+        entity = None 
+        for triple in question_triples:
+            if triple[1] == "http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre":
+                entity = triple[0]
+                break
+        sentence = {
+            "http://www.movieontology.org/2009/10/01/movieontology.owl#TVSeries": "Quais as séries do gênero {}?",
+            "http://www.movieontology.org/2009/10/01/movieontology.owl#Movie": "Quais os filmes do gênero {}?",
+
+        }
+        # --------------------------------------------------------------------------------------------------------
+
+
         for subj, pred, obj in question_triples:
             if pred == "has_value":
                 if entities[obj] and obj not in verified_entities:
                     verified_entities.append(obj)
                     prop = prop_ref[obj]
-                    # name = self.trees["classes"][obj].name
+                    # uri = self.trees["classes"][obj].data
                     if subj in self.trees["classes"]:
-                        name = self.trees["classes"][subj].name
+                        #name = self.trees["classes"][subj].name
                         for rec in self._get_related_classes(
                             prop, range_uri=obj
                         ):
-                            recommendations.append(f"💡 {name}: {rec.name}")
+                            recommendations.append(f"💡 {sentence[entity].format(rec.name.lower())}")
             else:
                 if (
                     entities[obj]
@@ -390,7 +407,7 @@ class Recommendation:
                 ):
                     verified_entities.append(obj)
                     if pred in self.trees["object_properties"]:
-                        name = self.trees["object_properties"][pred].name
+                        # name = self.trees["object_properties"][pred].name
                         for rec in self._get_related_properties(
                             pred,
                             "object_properties",
@@ -402,7 +419,7 @@ class Recommendation:
                             )
                     else:
                         if pred in self.trees["data_properties"]:
-                            name = self.trees["data_properties"][pred].name
+                            # name = self.trees["data_properties"][pred].name
                             for rec in self._get_related_properties(
                                 pred, "data_properties", domain_uri=subj
                             ):
@@ -412,7 +429,7 @@ class Recommendation:
                 if entities[subj] and subj not in verified_entities:
                     verified_entities.append(subj)
                     if subj in self.trees["classes"]:
-                        name = self.trees["classes"][subj].name
+                        # name = self.trees["classes"][subj].name
                         for rec in self._get_related_classes(pred, subj):
                             recommendations.append(
                                 self.text.format(rec.name)
