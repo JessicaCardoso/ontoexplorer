@@ -39,7 +39,7 @@ class Recommendation:
         self.text = settings.get("rec_text")
         self.suggestion_text = settings.get("suggestion_text")
         model_path = settings.get("model_path")
-        if model_path:
+        if model_path if self.order=="semantic":
             self.similarity_threshold = settings.getfloat(
                 "similarity_threshold"
             )
