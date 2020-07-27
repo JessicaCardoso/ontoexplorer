@@ -398,8 +398,8 @@ class Recommendation:
                         for rec in self._get_related_classes(
                             prop, range_uri=obj
                         ):
-                        	if entity in sentence:
-                            	recommendations.append(f"💡 {sentence[entity].format(rec.name.lower())}")
+                            if entity in sentence:
+                                recommendations.append(f"💡 {sentence[entity].format(rec.name.lower())}")
             else:
                 if (
                     entities[obj]
