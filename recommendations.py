@@ -373,20 +373,6 @@ class Recommendation:
         prop_ref, entities = self.entities_that_can_be_exchanged(question_triples)
         verified_entities = []
 
-        # -------------------------Caso especial de gênero-------------------------------------------------------
-        entity = None 
-        for triple in question_triples:
-            if triple[1] == "http://www.movieontology.org/2009/10/01/movieontology.owl#belongsToGenre":
-                entity = triple[0]
-                break
-        sentence = {
-            "http://www.movieontology.org/2009/10/01/movieontology.owl#TVSeries": "Quais as séries do gênero {}?",
-            "http://www.movieontology.org/2009/10/01/movieontology.owl#Movie": "Quais os filmes do gênero {}?",
-
-        }
-        # --------------------------------------------------------------------------------------------------------
-
-
         for subj, pred, obj in question_triples:
             if pred == "has_value":
                 if entities[obj] and obj not in verified_entities:
@@ -394,12 +380,11 @@ class Recommendation:
                     prop = prop_ref[obj]
                     # uri = self.trees["classes"][obj].data
                     if subj in self.trees["classes"]:
-                        #name = self.trees["classes"][subj].name
+                        # name = self.trees["classes"][subj].name
                         for rec in self._get_related_classes(
                             prop, range_uri=obj
                         ):
-                            if entity in sentence:
-                                recommendations.append(f"💡 {sentence[entity].format(rec.name.lower())}")
+                            recommendations.append(self.text.format(rec.name))
             else:
                 if (
                     entities[obj]
